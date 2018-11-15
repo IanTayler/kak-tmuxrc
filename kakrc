@@ -6,19 +6,22 @@ define-command -params 0 lpe 'lint-previous-error'
 
 hook global BufCreate .* %{editorconfig-load}
 
+hook global BufCreate .*[.](js)x? %{
+  set-option buffer filetype javascript
+}
+
 # Python
 hook global WinSetOption filetype=python %{
   jedi-enable-autocomplete
   lint-enable
-  set-option global lintcmd 'python -m pylint'
-  set-option global formatcmd 'python -m black -'
+  set-option window lintcmd 'python -m pylint'
+  set-option window formatcmd 'python -m black -'
 }
 
 # JS
-hook global WinSetOption filetype=javascript %{
-  lint-enable
-  set-option global lintcmd 'npx eslint --stdin'
-  set-option global formatcmd 'npx prettier --parser babylon'
+hook global WinSetOption filetype=(javascript|js|typescript) %{
+  set-option window lintcmd 'npx eslint --format unix'
+  set-option window formatcmd 'npx prettier --parser babylon'
 }
 
 # Plugins
